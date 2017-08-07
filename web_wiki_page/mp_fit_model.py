@@ -66,7 +66,7 @@ def consumer(out_queue, out_fname):
 
     # Saving results
     with open(out_fname, "wb") as wf:
-        pickle.dump(models, wf)
+        pickle.dump(models, wf, protocol=2)
 
 
 if __name__ == "__main__":
