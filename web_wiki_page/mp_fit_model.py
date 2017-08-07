@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#-*- coding: utf8 -*-
 import argparse
 import sys
 import pickle
@@ -36,6 +37,13 @@ def worker(in_queue, out_queue):
         except Empty:
             # waiting for task
             pass
+        except Exception as err:
+            # TODO: join workers with errors
+            # In this case, there may be undone tasks in in_queue.
+            # That is, this program will hang there and wait for in_queue which will never join.
+            print("Unknown error for worker:\n{}".format(err), flush=True)
+            print("[{}] worker exit with error".format(pid), flush=True)
+            break
 
 
 def consumer(out_queue, out_fname):
@@ -51,6 +59,11 @@ def consumer(out_queue, out_fname):
         except Empty:
             # waiting for record
             pass
+        except Exception as err:
+            print("Unknown error for consumer:\n{}".format(err), flush=True)
+            print("Consumer exit", flush=True)
+            return None
+
     # Saving results
     with open(out_fname, "wb") as wf:
         pickle.dump(models, wf)
