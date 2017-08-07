@@ -22,7 +22,7 @@ def worker(in_queue, out_queue):
                 in_queue.task_done()
                 break
             lags_to_try, ts = task
-            page, access = ts[0], ts[1:]
+            page, access = ts[0].encode('utf8'), ts[1:]
             print("[{}] Processing {}".format(pid, page), flush=True)
             results = {}
             for num_lags in lags_to_try:
